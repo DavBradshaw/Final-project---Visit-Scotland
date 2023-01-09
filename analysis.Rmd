@@ -135,10 +135,6 @@ When looking at the data by the amount spent per visit we can see that shopping 
 
 Based on this analysis we should look to increase the number of trips people take to these type of tourism activities to help generate additional income throughout Scotland.
 
-# What key demographics shoudl be focused on? Who spends the most and who visits the most?
-
-
-
 # What type of locations receive the most visits and where do people spend the most?
 
 ```{r}
@@ -212,8 +208,7 @@ Car is far and away the most popular form of transport to arrive at these locati
 
 Within those people who traveled by public transport train and bus/coach (regular) were the most common transportation taken for visits to tourism activities. 
 
-
-
+_Something about walked being the 4th most popular mode of transport._
 
 # What type of accomodation is most popular?
 
@@ -228,10 +223,9 @@ accomodation %>%
 
 ```
 
-Due to the impact of covid-19 this data has been severely impacted with very few stays in any kind of accommodation in 2020. While 2021 shows some level of recovery the majority of accommodation types do not appear to have fully recovered. The data used to answer any business questions will therefore be cut off at 2019 before these unprecedented disruptions took place.
+This is the only set of data which runs up to 2021. Due to the impact of covid-19 this data has been severely impacted with very few stays in any kind of accommodation in 2020. While 2021 shows some level of recovery the majority of accommodation types do not appear to have fully recovered. The data used to answer any business questions will therefore be cut off at 2019 before these unprecedented disruptions took place.
 
 The type of accommodation which shows the least impact to covid-19 appears to be caravan and camping parks. With these being full outdoors this type of accommodation will have seen less restrictions and possibly have been more able to stay open and seemed more attractive to prospective customers.
-
 
 ```{r}
 
@@ -248,15 +242,20 @@ accomodation %>%
 ```
 The data is not available for the total number of stays in the various types of accommodation so occupancy rates will be used to judge popularity, with more occupied accommodation being deemed more popular than less occupied.
 
-Over the full dataset across all sizes of accommodation and location bed occupancy is highest in hotels indicating these are the most popular place to stay.
+Over the full dataset across all sizes of accommodation and location bed occupancy is highest in hotels indicating these are the most popular place to stay. The corresponding bed occupancy data shows there are many rooms with multiple beds where not all are occupied and would be expected to always be lower.
 
 With additional data it would be very beneficial to be able to see areas with high occupancy rates which could be somewhere which could sustain additional hotels to increase overall visits. It would also be of interest to see how the occupancy runs throughout the year in various types of accommodation. It would be expected that accommodation like camping and caravan parks would see a sharp decline over the winter period while this would not be as extreme for hotels.
 
 # Is there a difference is which accomodation is popular at differenet locations?
 
-
 ```{r}
-accomodation
+
+accomodation %>% 
+  filter(location != "All") %>% 
+  filter(weekday_weekend == "All", size_of_accommodation == "All") %>% 
+  group_by(accommodation_type_and_occupancy, location) %>% 
+  summarise(average_occupancy = mean(percent_occupancy)) %>% 
+  arrange(desc(accommodation_type_and_occupancy), desc(average_occupancy))
 
 accomodation %>% 
   filter(location != "All") %>% 
@@ -267,20 +266,52 @@ accomodation %>%
   geom_col()+
   facet_wrap(~location)
 
+accomodation %>% 
+  filter(location != "All") %>% 
+  filter(weekday_weekend == "All", size_of_accommodation == "All") %>% 
+  group_by(accommodation_type_and_occupancy, location) %>% 
+  summarise(average_occupancy = mean(percent_occupancy)) %>% 
+  ggplot(aes(x = average_occupancy, y = location))+ 
+  geom_col()+
+  facet_wrap(~accommodation_type_and_occupancy)
 
 ```
+
+There are significant difference in the occupancy precentages of different types of accommodation by location, however hotels remain the most popular accommodation type in all locations varying from 68% in large urban areas to 55% in remote rural locations.
+
+There are more differences from this point with caravan and camping parks being the second most popular type of accommodation in remote small locations but the least popular in accessible small locations. This suggests that camping/caravaning in more remote areas is a more popular choice, perhaps with the people who visit these areas enjoying the remoteness that can be best served by this type of accommodation.
+
+Hostel occupancy also varies from being the second most popular type in large urban areas to the least popular in other urban areas. Hostels are often more popular in large towns as a budget alternative in a central location and this data suggests that is not as popular in other urban areas. However this becomes more popular again when looking to remote rural locations where hostels are the third most popular type of accommodation.
 
 # Is there a particular demographic of visitors that we should be focusing on? Who spends the most and who visits the most?
 
 ```{r}
 
-demographics
+demographics <-  demographics %>% 
+  mutate(spend_per_visit = gbp_spent/ visits)
+# can do all categories like the example below or as some form of grid
+# demographics %>% 
+#   filter(category == "access_to_car") %>% 
+#   ggplot(aes(x = type, y = spend_per_visit))+
+#   geom_col()
 
 demographics %>% 
-  filter(category == "social_grade") %>% 
-  ggplot(aes(x = year, y = gbp_spent))+
-  geom_line()+
-  facet_wrap(~type)
+  ggplot(aes(x = type, y = gbp_spent))+
+  geom_col()+
+  facet_grid(~category, scales = "free")+ 
+  theme(axis.text.x = element_text(angle = 90, vjust = 0.5, size = 4))
+
+demographics %>% 
+  ggplot(aes(x = type, y = visits))+
+  geom_col()+
+  facet_grid(~category, scales = "free")+
+  theme(axis.text.x = element_text(angle = 90, vjust = 0.5, size = 4))
+
+demographics %>% 
+  ggplot(aes(x = type, y = spend_per_visit))+
+  geom_col()+
+  facet_grid(~category, scales = "free")+
+  theme(axis.text.x = element_text(angle = 90, vjust = 0.5, size = 4))
 
 ```
 
