@@ -1,0 +1,35 @@
+---
+title: "Presentation"
+author: "D. Bradshaw"
+date: "2023-01-09"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# Introduction
+
+# Data
+
+For the data sets used is from statistics.gov.scot. Data was collected using a survey methodology and due to Covid-19 collection was disrupted in 2020.
+
+_Activities, location, transport and demographic data_
+
+This data was generated using over 35,000 interviews with adults over 16, resident in England, Wales and Scotland during weekly survery waves.
+
+A tourism day trip is defined as taking part in a listed activity, which takes more than 3 hours out of the home and is not done regularly. The activity must not be done in the place of living or work (if started after work). Trips specifically to visitor attractions, live sporting events and special public events did not have to meet all of these criteria.
+
+_Accomodation data_
+
+This data was produced from a survey completed by the accomodation provider. This survery is sent out monthly and participation of providers varies over time. Geographic locations are defined as follows;
+
+* Large Urban Areas (settlements of over 125,000 people)
+* Other Urban Areas (settlements of 10,000 to 124,999 people)
+* Accessible Small Towns (settlements of 3,000 to 9,999 people and within 30 minutes drive of a settlement of 10,000 or more) 
+* Remote Small Towns (settlements of 3,000 to 9,999 people and with a drive time of over 30 minutes to a settlement of 10,000 or more) 
+* Accessible Rural (settlements of less than 3,000 people and within 30 minutes drive of a settlement of 10,000 or more) 
+* Remote Rural (settlements of less than 3,000 people and with a drive time of over 30 minutes to a settlement of 10,000 or more)
+
+15 rows only showed a low sample size of data (primarily small hotels and hostels), these will be discounted for the sake of using more reliable data.
