@@ -56,7 +56,7 @@ visits <- rdt_cleaner %>%
 rdt_clean <- left_join(nights, visits, by = c("location", "year_range", "region_of_residence")) %>% 
   left_join(spent, by = c("location", "year_range", "region_of_residence"))
 
-rdt_clean
+write_csv(rdt_clean, here("clean data/rdt_clean.csv"))
 
 ```
 
@@ -175,12 +175,32 @@ write_csv(tdvt_clean, here("clean data/travel.csv"))
 
 ```
 
+
 ```{r}
 
-geometry_data
+third_map <- sf::st_read(here("Raw data/third shape file/pub_las.shp")) %>% 
+  clean_names() %>% 
+  select(local_auth, geometry)
 
-ggplot(data = geometry_data)+
-  geom_sf()
+class(third_map)
+
+third_map_simple <- st_simplify(third_map, preserveTopology = FALSE, dTolerance = 2000)
+
+rdt_with_map <- rdt_clean %>% 
+  mutate(location = recode(location, "Na h-Eileanan Siar" = "Eilean Siar")) %>% 
+  left_join(third_map_simple, by = c("location" = "local_auth"))
+
+rdt_minus_scotland <- rdt_with_map %>% 
+  filter(location != "Scotland")
+
+latlong <- "+init=epsg:4326"
+
+rdt_map <- st_as_sf(rdt_with_map)
+
+lat_long_rdt_map <- st_transform(rdt_map, crs = latlong)
+
+st_write(lat_long_rdt_map, here("clean data/regional_data.geojson"), append = TRUE)
+
 
 ```
 

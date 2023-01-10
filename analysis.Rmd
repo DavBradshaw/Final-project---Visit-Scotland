@@ -3,6 +3,10 @@ Load Libraries
 ```{r}
 library(tidyverse)
 library(here)
+library(leaflet)
+library(sf)
+library(png)
+library(htmltools)
 
 options(scipen = 999)
 ```
@@ -30,6 +34,9 @@ travel <- read_csv(here("clean data/travel.csv"))
 accomodation <- read_csv(here("clean data/accomodation.csv"))
 
 demographics <- read_csv(here("clean data/demographics.csv"))
+
+rdt <- st_read(here("clean data/regional_data.geojson"))
+
 ```
 
 
@@ -54,7 +61,7 @@ activities %>%
   arrange(desc(total_income_millions)) %>%
   mutate(tourism_order = 1:n()) %>%
   mutate(tourism_order = as.character(tourism_order)) %>% 
-  ggplot(aes(x = total_income_millions, y = fct_reorder( tourism_activity, total_income_millions), fill = forcats::fct_inorder( tourism_order))) +
+  ggplot(aes(x = total_income_millions, y = fct_reorder( tourism_activity, total_income_millions), fill = forcats::fct_inorder(tourism_order))) +
   geom_col()+
   scale_fill_manual(values = rep(visit_colour, length.out = 15))+
   theme(legend.position = "none")+
@@ -232,7 +239,7 @@ The type of accommodation which shows the least impact to covid-19 appears to be
 accomodation_to_2019 <-  accomodation %>% 
   filter(year != 2021, year != 2022)
 
-accomodation %>% 
+accomodation_to_2019 %>% 
   filter(location == "All" & weekday_weekend == "All", size_of_accommodation == "All") %>% 
   group_by(accommodation_type_and_occupancy) %>% 
   summarise(average_occupancy = median(percent_occupancy)) %>% 
@@ -250,14 +257,7 @@ With additional data it would be very beneficial to be able to see areas with hi
 
 ```{r}
 
-accomodation %>% 
-  filter(location != "All") %>% 
-  filter(weekday_weekend == "All", size_of_accommodation == "All") %>% 
-  group_by(accommodation_type_and_occupancy, location) %>% 
-  summarise(average_occupancy = mean(percent_occupancy)) %>% 
-  arrange(desc(accommodation_type_and_occupancy), desc(average_occupancy))
-
-accomodation %>% 
+accomodation_to_2019 %>% 
   filter(location != "All") %>% 
   filter(weekday_weekend == "All", size_of_accommodation == "All") %>% 
   group_by(accommodation_type_and_occupancy, location) %>% 
@@ -266,29 +266,45 @@ accomodation %>%
   geom_col()+
   facet_wrap(~location)
 
-accomodation %>% 
+accomodation_to_2019 %>% 
   filter(location != "All") %>% 
   filter(weekday_weekend == "All", size_of_accommodation == "All") %>% 
   group_by(accommodation_type_and_occupancy, location) %>% 
-  summarise(average_occupancy = mean(percent_occupancy)) %>% 
-  ggplot(aes(x = average_occupancy, y = location))+ 
-  geom_col()+
-  facet_wrap(~accommodation_type_and_occupancy)
+  mutate(average_occupancy = median(percent_occupancy)) %>% 
+  ggplot(aes(x = location, y = average_occupancy, group = accommodation_type_and_occupancy, colour = accommodation_type_and_occupancy))+
+  geom_line()
+
+accomodation_to_2019 %>% 
+  filter(location != "All") %>% 
+  filter(weekday_weekend == "All", size_of_accommodation == "All") %>% 
+  group_by(accommodation_type_and_occupancy, location) %>% 
+  summarise(average_occupancy = median(percent_occupancy)) %>% 
+  arrange(desc(accommodation_type_and_occupancy), desc(average_occupancy))
 
 ```
 
-There are significant difference in the occupancy precentages of different types of accommodation by location, however hotels remain the most popular accommodation type in all locations varying from 68% in large urban areas to 55% in remote rural locations.
+There are significant difference in the occupancy precentages of different types of accommodation by location, however hotels remain the most popular accommodation type in all locations varying from 77% in large urban areas to 59% in remote small towns.
 
-There are more differences from this point with caravan and camping parks being the second most popular type of accommodation in remote small locations but the least popular in accessible small locations. This suggests that camping/caravaning in more remote areas is a more popular choice, perhaps with the people who visit these areas enjoying the remoteness that can be best served by this type of accommodation.
+Self-catering units are the second most popular type of accommodation in accessible rural areas (55%) and the second least popular in remote small towns (40%). Demand for this accommodation type clearly varies significantly due to the location.
 
-Hostel occupancy also varies from being the second most popular type in large urban areas to the least popular in other urban areas. Hostels are often more popular in large towns as a budget alternative in a central location and this data suggests that is not as popular in other urban areas. However this becomes more popular again when looking to remote rural locations where hostels are the third most popular type of accommodation.
+All types of accommodation have their highest occupancy rates in large urban areas apart from guest houses which seem to benefit from areas of lower population to generate higher occupancy rates. This may be due to lower competition outside of large urban areas or an increased desire for this type of accommodation in less populated locations. These show a peak in occupancy in other urban areas.
+
+
 
 # Is there a particular demographic of visitors that we should be focusing on? Who spends the most and who visits the most?
 
 ```{r}
 
 demographics <-  demographics %>% 
-  mutate(spend_per_visit = gbp_spent/ visits)
+  mutate(gbp_spent_billions = gbp_spent/1000000000,
+         visits_millions = visits/1000000,
+         spend_per_visit = gbp_spent/ visits) %>% 
+  group_by(category, type) %>% 
+  mutate(total_spend = sum(gbp_spent_billions),
+         total_visits = sum(visits_millions),
+         median_spend_per_visit = median(spend_per_visit)) %>% 
+  ungroup() %>% 
+  arrange(category, type)
 # can do all categories like the example below or as some form of grid
 # demographics %>% 
 #   filter(category == "access_to_car") %>% 
@@ -296,13 +312,13 @@ demographics <-  demographics %>%
 #   geom_col()
 
 demographics %>% 
-  ggplot(aes(x = type, y = gbp_spent))+
+  ggplot(aes(x = type, y = gbp_spent_billions))+
   geom_col()+
   facet_grid(~category, scales = "free")+ 
   theme(axis.text.x = element_text(angle = 90, vjust = 0.5, size = 4))
 
 demographics %>% 
-  ggplot(aes(x = type, y = visits))+
+  ggplot(aes(x = type, y = visits_millions))+
   geom_col()+
   facet_grid(~category, scales = "free")+
   theme(axis.text.x = element_text(angle = 90, vjust = 0.5, size = 4))
@@ -313,10 +329,120 @@ demographics %>%
   facet_grid(~category, scales = "free")+
   theme(axis.text.x = element_text(angle = 90, vjust = 0.5, size = 4))
 
+demographics %>% 
+  filter(category == "social_grade")
+
 ```
+
+Access to a car shows a large effect on the amount of money spent (£31 billion to £5 billion) in a large part due to those in cars making over 4 times as many visits. The is also a difference in how much is spent in each visit with those individuals with access to a car spending a median of just over £40 compared to those without spending just under £30.
+
+Age also shows some difference with the youngest and oldest groups spending the least and being some of the most frequent visitors. Those individuals between 25 and 44 spend the most of each visit with median values across all 3 groups over £300. 
+
+When looking at whether individuals have children these people take almost 3 times as many trips and spend twice as much money as those without. However due to the increased size of group on the trip when children are involved the average spend per trip is higher.
+
+Tracking by employment status we can see that those individuals with full/part time jobs spend almost 5 times as much as either those in education or unemployed and make around 5 times as many visits. They also spend more per visit at £44 per visit (£25 for those in education and £32 for those who are unemployed).
+
+When analysing by gender males and females spend a relatively similar amount and make around as many visits with females being slightly higher in each category.
+
+Looking at whether individuals are married or not the total spent is almost double for married individuals, perhaps indicative of more groups with others (spouse, family) as opposed to not married individuals. Married people take around 150 million trips more than unmarried people.
+
+Examining social grade we can see that those in AB spend the most and take the most trips with individuals in C2 making the least trips and those in DE spending the least. This makes some sense when looking at the descriptions of these roles as it could be expected that those in grade AB would have more disposable income and free time in which to take these trips.
+
+![](analysis_files/social_grades.png)
+
+
 
 
 # What insights can we gain from regional tourism? Where are our visitors from and how does the money spent/ nights stayed and visits made compare?
+
+
+```{r}
+
+median_rdt <- rdt %>%
+  filter(location != "Scotland") %>% 
+  group_by(location, region_of_residence) %>% 
+  mutate(average_nights_per_year_millions = median(nights)/1000000,
+         average_visits_per_year = median(visits),
+         average_spend = median(gbp_spent)) %>% 
+  ungroup()
+
+england_rdt <- median_rdt %>% 
+  filter(region_of_residence == "England")
+
+scotland_rdt <- median_rdt %>% 
+  filter(region_of_residence == "Scotland")
+
+```
+
+
+```{r}
+tag.map.title <- tags$style(HTML("
+  .leaflet-control.map-title { 
+    transform: translate(-50%,20%);
+    position: fixed !important;
+    left: 50%;
+    text-align: center;
+    padding-left: 10px; 
+    padding-right: 10px; 
+    background: rgba(255,255,255,0.75);
+    font-weight: bold;
+    font-size: 28px;
+  }
+"))
+
+pal1 <- colorBin("YlOrRd", domain = england_rdt$average_nights_per_year_millions, bins = 7)
+
+labels1 <- labels <- sprintf(
+  "<strong>%s</strong><br/>%g Average nights (millions) stayed in region per year",
+  england_rdt$location, england_rdt$average_nights_per_year_millions
+) %>% lapply(htmltools::HTML)
+
+title1 <- tags$div(
+  tag.map.title, HTML("Average nights (millions) stayed in region per year by visitors from England")
+)  
+
+leaflet(england_rdt) %>%
+  addTiles() %>% 
+  addPolygons(fillColor = ~pal1(average_nights_per_year_millions),
+              weight = 0.1,
+              color = "white",
+              fillOpacity = 1,
+              label = labels1) %>% 
+  addLegend(pal = pal1,
+            values = ~average_nights_per_year_millions,
+            position = "bottomleft",
+            opacity = 1) %>% 
+  setView(lat = 58.0000, lng = -5.0000, zoom = 5)%>% 
+  addControl(title1, position = "topright", className = "map-title")
+
+pal2 <- colorBin("YlOrRd", domain = scotland_rdt$average_nights_per_year_millions, bins = 7)
+
+labels2 <- labels <- sprintf(
+  "<strong>%s</strong><br/>%g Average nights (millions) stayed in region per year",
+  scotland_rdt$location, scotland_rdt$average_nights_per_year_millions
+) %>% lapply(htmltools::HTML)
+
+title2 <- tags$div(
+  tag.map.title, HTML("Average nights (millions) stayed in region per year by visitors from Scotland")
+)  
+
+leaflet(scotland_rdt) %>%
+  addTiles() %>% 
+  addPolygons(fillColor = ~pal2(average_nights_per_year_millions),
+              weight = 0.1,
+              color = "white",
+              fillOpacity = 1,
+              label = labels2) %>% 
+  addLegend(pal = pal1,
+            values = ~average_nights_per_year_millions,
+            position = "bottomleft",
+            opacity = 1) %>% 
+  setView(lat = 58.0000, lng = -5.0000, zoom = 5) %>% 
+  addControl(title2, position = "topright", className = "map-title")
+
+```
+
+
 
 # How have general tourism rates changed over time?
 
