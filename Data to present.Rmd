@@ -33,3 +33,7 @@ This data was produced from a survey completed by the accomodation provider. Thi
 * Remote Rural (settlements of less than 3,000 people and with a drive time of over 30 minutes to a settlement of 10,000 or more)
 
 15 rows only showed a low sample size of data (primarily small hotels and hostels), these will be discounted for the sake of using more reliable data.
+
+_Regional tourism data_
+
+This data is gathered from surveys and looks at overnight trips taken for any purpose. Residents of 
