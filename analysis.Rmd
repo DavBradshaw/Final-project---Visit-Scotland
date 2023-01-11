@@ -278,7 +278,7 @@ travel %>%
 
 ```
 
-Car is far and away the most popular form of transport to arrive at these locations by. In fact there is almost double the amount of visits made by car than all other methods of transport combined.
+Car is far and away the most popular form of transport to arrive at these locations by. In fact there is almost double the amount of visits made by car than all other methods of transport combined. This is a good sign for many of the more remote tourism locations that are not serviced by public transport and the majority of the public's chosen method of transport will still allow them to reach these locations.
 
 Within those people who traveled by public transport train and bus/coach (regular) were the most common transportation taken for visits to tourism activities. 
 
@@ -287,9 +287,6 @@ The third most popular method of transport is walked. This indicates that a lot 
 # What type of accomodation is most popular?
 
 ```{r}
-
-accomodation %>% 
-  count(year)
 
 accomodation %>% 
   filter(location == "All" & weekday_weekend == "All", size_of_accommodation == "All") %>% 
@@ -393,35 +390,69 @@ demographics <-  demographics %>%
 #   filter(category == "access_to_car") %>% 
 #   ggplot(aes(x = type, y = spend_per_visit))+
 #   geom_col()
+# or facet grid them
+# demographics %>% 
+#   ggplot(aes(x = category, y = visits_millions, fill = type))+
+#   geom_bar(position = "stack", stat = "identity")+
+#   facet_grid(~category, scales = "free")+
+#   theme(axis.text.x = element_text(angle = 90, vjust = 0.5, size = 4))
+```
+
+
+
+```{r}
+demographics %>% 
+  mutate(type = recode(type, "Employed/self-employed (full or part time)" = "In employment",
+                       "In full or part time education" = "In education",
+                       "Unemployed/not working" = "Not working")) %>% 
+  group_by(category, type) %>% 
+  summarise(total_spend_billions = sum(gbp_spent_billions)) %>% 
+  ggplot(aes(fill = type, y = total_spend_billions, x = category))+
+  geom_bar(position = "stack", stat = "identity")+
+  geom_text(aes(label = type), size = 2, position = position_stack(vjust = 0.6)) +
+  geom_text(aes(label = total_spend_billions), size = 2, position = position_stack(vjust = 0.4)) +
+  theme(legend.position = "none")+
+  labs(x = "Demographic category, stack by type",
+       y = "Total spend (£ billions)",
+       title = "Total spending of different demographics")+
+  visit_theme
 
 demographics %>% 
-  ggplot(aes(x = type, y = gbp_spent_billions))+
-  geom_col()+
-  facet_grid(~category, scales = "free")+ 
-  theme(axis.text.x = element_text(angle = 90, vjust = 0.5, size = 4))
+  mutate(type = recode(type, "Employed/self-employed (full or part time)" = "In employment",
+                       "In full or part time education" = "In education",
+                       "Unemployed/not working" = "Not working")) %>% 
+  group_by(category, type) %>% 
+  summarise(total_visits = sum(visits_millions)) %>% 
+  ggplot(aes(fill = type, y = total_visits, x = category))+
+  geom_bar(position = "stack", stat = "identity")+
+  geom_text(aes(label = type), size = 2, position = position_stack(vjust = 0.6)) +
+  geom_text(aes(label = total_visits), size = 2, position = position_stack(vjust = 0.4)) +
+  theme(legend.position = "none")+
+  labs(x = "Demographic category, stack by type",
+       y = "Total visits (millions)",
+       title = "Total visits of different demographics")+
+  visit_theme
 
-demographics %>% 
-  ggplot(aes(x = type, y = visits_millions))+
+demographics %>%
+  distinct(type, .keep_all = TRUE) %>% 
+  ggplot(aes(x = type, y = median_spend_per_visit, fill = type))+
   geom_col()+
   facet_grid(~category, scales = "free")+
-  theme(axis.text.x = element_text(angle = 90, vjust = 0.5, size = 4))
+  theme(axis.text.x = element_text(angle = 90, vjust = 0.5, size = 4),
+        legend.position = "none")+
+    labs(x = "Demographic category",
+       y = "Median spend per visit",
+       title = "Median spending by different demographics")+
+  visit_theme
 
-demographics %>% 
-  ggplot(aes(x = type, y = spend_per_visit))+
-  geom_col()+
-  facet_grid(~category, scales = "free")+
-  theme(axis.text.x = element_text(angle = 90, vjust = 0.5, size = 4))
-
-demographics %>% 
-  filter(category == "social_grade")
 
 ```
-With only 7 years worth of data available for each category and type there is insufficient points on which to base a model of statistical significance for these different demographics. Due to this more basic summary evaluations must be used.
 
+With only 7 years worth of data available for each category and type there is insufficient points on which to base a model of statistical significance for these different demographics. Due to this more basic summary evaluations must be used.
 
 Access to a car shows a large effect on the amount of money spent (£31 billion to £5 billion) in a large part due to those in cars making over 4 times as many visits. The is also a difference in how much is spent in each visit with those individuals with access to a car spending a median of just over £40 compared to those without spending just under £30.
 
-Age also shows some difference with the youngest and oldest groups spending the least and being some of the most frequent visitors. Those individuals between 25 and 44 spend the most of each visit with median values across all 3 groups over £300. 
+Age also shows some difference with the youngest and oldest groups spending the least and being some of the most frequent visitors. Those individuals between 25 and 34 and 45 and 54 spend the most of each visit with median values across both groups over £40 per visit. 
 
 When looking at whether individuals have children these people take almost 3 times as many trips and spend twice as much money as those without. However due to the increased size of group on the trip when children are involved the average spend per trip is higher.
 
@@ -429,14 +460,11 @@ Tracking by employment status we can see that those individuals with full/part t
 
 When analysing by gender males and females spend a relatively similar amount and make around as many visits with females being slightly higher in each category.
 
-Looking at whether individuals are married or not the total spent is almost double for married individuals, perhaps indicative of more groups with others (spouse, family) as opposed to not married individuals. Married people take around 150 million trips more than unmarried people.
+Looking at whether individuals are married or not the total spent is almost double for married individuals, perhaps indicative of more groups trips (spouse, family) as opposed to unmarried individuals. Married people take around 150 million trips more than unmarried people.
 
 Examining social grade we can see that those in AB spend the most and take the most trips with individuals in C2 making the least trips and those in DE spending the least. This makes some sense when looking at the descriptions of these roles as it could be expected that those in grade AB would have more disposable income and free time in which to take these trips.
 
 ![](analysis_files/social_grades.png)
-
-
-
 
 # What insights can we gain from regional tourism? Where are our visitors from and how does the money spent/ nights stayed and visits made compare?
 
@@ -455,11 +483,13 @@ median_rdt %>%
   group_by(region_of_residence) %>% 
   summarise(total_night_millions = sum(nights)/1000000,
             total_visit_millions = sum(visits)/1000000,
-            total_spent_millions = sum(gbp_spent)/1000000) 
+            total_spent_millions = sum(gbp_spent)/1000000) %>% 
+  as_tibble() %>% 
+  select(-geometry)
 ```
 With the data for regional tourism only England and Scotland can truly be analysed as Wales is grouped with the rest of GB and due to rounding errors disappears in certain areas. This data is concerned with overnight trips for any purpose.
 
-Comparing England and Scotland we can see that people from these two countries accounted for a very similar number of overnight visits to Scotland. However people from England tend to stay for more nights and spend more money.
+Comparing England and Scotland we can see that people from these two countries accounted for a very similar number of overnight visits to Scotland. However people from England tend to stay for more nights and (therefore) spend more money.
 
 ```{r}
 
@@ -550,7 +580,7 @@ We can see the most popular location for visitors from England is the city of Ed
 
 The highlands is the most common area to stay for visitors from Scotland (3.4 million night stayed per year) with Argyll and Bute (1.6 million nights stayed per year) and Perth and Kinross (1.3 million nights stayed per year) coming next. After this come Edinburgh and Glasgow (1.3 and 1.1 million nights stayed per year respectively). These are lower as expected with lots of the population of Scotland living in these areas they have less reason for overnight stays rather than at home.
 
-East Renfrewshire, East Dunbartonshire, Midlothian, Clackmannanshire, East Ayrshire, Renfrewshire and South Lanarkshire all get less than 100,000 nights of visits on average each year.
+East Renfrewshire, East Dunbartonshire, Midlothian, Clackmannanshire, East Ayrshire, Renfrewshire and South Lanarkshire all get less than 100,000 nights of visits on average each year. A similar list to those where people from England spent less time.
 
 
 Visitors from England in terms of total visits to each region
@@ -578,7 +608,7 @@ leaflet(england_rdt) %>%
 
 ```
 
-
+Visitors from Scotland in terms of total visits to each region
 ```{r}
 
 pal4 <- colorBin("YlOrRd", domain = scotland_rdt$average_visits_per_year_thousands, bins = 7)
@@ -602,14 +632,26 @@ leaflet(scotland_rdt) %>%
   setView(lat = 58.0000, lng = -5.0000, zoom = 5)
 
 ```
+Popularity for visiting each region largely mirrors where people have spent the most night with the top 5 destinations for both England and Scotland in terms of nights being the top 5 for visits (albeit in a different order). The main change is an increased popularity of Edinburgh and Glasgow for Scottish tourists in terms of visits. With much of the Scottish population in the central belt this makes some sense as these cities would both be easily reached without the distance requirement that could necessitate an overnight stay and contain lots of popular tourist attractions.
+
+The locations which are least popular too mirrors the data seen for nights bar some of the islands (Orkney and Shetland in particular). With these destinations being more remote we can see that comparatively they are more likely to be stayed in for longer than some mainland destinations.
+
+For the most part these trends maintain in terms of average spend with the most popular locations in terms of nights and visits being the places where people spend the most per visit.
+
+```{r}
+
+scotland_rdt %>% 
+  distinct(location, .keep_all = TRUE) %>% 
+  select(location, average_nights_per_year_millions, average_visits_per_year_thousands, average_spend) %>% 
+  arrange(desc(average_spend))
+
+england_rdt %>% 
+  distinct(location, .keep_all = TRUE) %>% 
+  select(location, average_nights_per_year_millions, average_visits_per_year_thousands, average_spend) %>% 
+  arrange(desc(average_spend))
 
 
-
-
-
-
-
-
+```
 
 # How have general tourism rates changed over time?
 
@@ -661,3 +703,4 @@ accomodation %>%
   geom_line()
 ```
 
+ 
