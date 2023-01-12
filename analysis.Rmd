@@ -7,6 +7,8 @@ library(leaflet)
 library(sf)
 library(png)
 library(htmltools)
+library(RColorBrewer)
+library(pals)
 
 options(scipen = 999)
 ```
@@ -25,6 +27,7 @@ visit_colour <- c("#650360", "#005EB8")
 
 Load data
 ```{r}
+
 activities <- read_csv(here("clean data/activities.csv"))
 
 locations <- read_csv(here("clean data/location.csv"))
@@ -296,11 +299,13 @@ accomodation %>%
   geom_line()+
   labs(x = "Year",
        y = "Average occupancy",
-       title = "Average occupancy of different accommodation types")+
+       title = "Average occupancy of different accommodation types",
+       color = "Type of accommodation")+
   scale_x_continuous(breaks = 2011:2021)+
   visit_theme+
   theme(panel.grid.minor.x = element_blank(),
-        axis.text.x = element_text(angle = 90, vjust = 0.5))
+        axis.text.x = element_text(angle = 90, vjust = 0.5))+
+  scale_colour_brewer(palette = "Set2")
 
 ```
 
@@ -352,7 +357,9 @@ accomodation_to_2019 %>%
         axis.text.x = element_text(angle = 90, vjust = 0.5))+
     labs(x = "Type of accommodation",
        y = "Average occupancy",
-       title = "Average occupancy of different accommodation types")
+       title = "Average occupancy of different accommodation types",
+       color = "Accommodation type")+
+  scale_colour_brewer(palette = "Set2")
 
 accomodation_to_2019 %>% 
   filter(location != "All") %>% 
@@ -412,7 +419,7 @@ demographics %>%
   geom_text(aes(label = type), size = 2, position = position_stack(vjust = 0.6)) +
   geom_text(aes(label = total_spend_billions), size = 2, position = position_stack(vjust = 0.4)) +
   theme(legend.position = "none")+
-  labs(x = "Demographic category, stack by type",
+  labs(x = "Demographic category, stacked by type",
        y = "Total spend (£ billions)",
        title = "Total spending of different demographics")+
   visit_theme
@@ -428,7 +435,7 @@ demographics %>%
   geom_text(aes(label = type), size = 2, position = position_stack(vjust = 0.6)) +
   geom_text(aes(label = total_visits), size = 2, position = position_stack(vjust = 0.4)) +
   theme(legend.position = "none")+
-  labs(x = "Demographic category, stack by type",
+  labs(x = "Demographic category, stacked by type",
        y = "Total visits (millions)",
        title = "Total visits of different demographics")+
   visit_theme
@@ -475,7 +482,7 @@ median_rdt <- rdt %>%
   group_by(location, region_of_residence) %>% 
   mutate(average_nights_per_year_millions = median(nights)/1000000,
          average_visits_per_year_thousands = median(visits)/1000,
-         average_spend = median(gbp_spent)) %>% 
+         average_spend_per_visit = round(gbp_spent/visits, digits = 2)) %>% 
   ungroup()
 
 median_rdt %>% 
@@ -642,13 +649,17 @@ For the most part these trends maintain in terms of average spend with the most 
 
 scotland_rdt %>% 
   distinct(location, .keep_all = TRUE) %>% 
-  select(location, average_nights_per_year_millions, average_visits_per_year_thousands, average_spend) %>% 
-  arrange(desc(average_spend))
+  select(location, average_nights_per_year_millions, average_visits_per_year_thousands, average_spend_per_visit) %>% 
+  arrange(desc(average_spend_per_visit)) %>% 
+  as_tibble() %>% 
+  select(-geometry)
 
 england_rdt %>% 
   distinct(location, .keep_all = TRUE) %>% 
-  select(location, average_nights_per_year_millions, average_visits_per_year_thousands, average_spend) %>% 
-  arrange(desc(average_spend))
+  select(location, average_nights_per_year_millions, average_visits_per_year_thousands, average_spend_per_visit) %>% 
+  arrange(desc(average_spend_per_visit)) %>% 
+  as_tibble() %>% 
+  select(-geometry)
 
 
 ```
@@ -659,30 +670,75 @@ england_rdt %>%
 
 activities %>% 
   filter(tourism_activity != "All") %>% 
-  ggplot(aes(x = year, y = visits, colour = tourism_activity))+
+  ggplot(aes(x = year, y = visits_millions, colour = tourism_activity))+
   geom_line(alpha = 0.5)+
-  geom_smooth(method = lm, se = FALSE)
+  geom_smooth(method = lm, se = FALSE)+
+  labs(x = "Year",
+       y = "Visits made (millions)",
+       title = "Visits by year to different activities",
+       color = "Type of activity")+
+  scale_x_continuous(breaks = 2011:2021)+
+  visit_theme+
+  theme(panel.grid.minor.x = element_blank(),
+        axis.text.x = element_text(angle = 90, vjust = 0.5))
 
 activities %>% 
   filter(tourism_activity != "All") %>% 
-  ggplot(aes(x = year, y = gbp_spent, colour = tourism_activity))+
+  ggplot(aes(x = year, y = gdp_spent_billions, colour = tourism_activity))+
   geom_line(alpha = 0.5)+
-  geom_smooth(method = lm, se = FALSE)
+  geom_smooth(method = lm, se = FALSE)+
+  labs(x = "Year",
+       y = "Money spent (£ billions)",
+       title = "Money spent by year on different activities",
+       color = "Type of activity")+
+  scale_x_continuous(breaks = 2011:2021)+
+  visit_theme+
+  theme(panel.grid.minor.x = element_blank(),
+        axis.text.x = element_text(angle = 90, vjust = 0.5))
 
 locations %>% 
   filter(type_of_location_visited != "All areas") %>% 
-  ggplot(aes(x= year, y = visits, colour = type_of_location_visited))+
+  mutate(visits_millions = visits / 1000000) %>% 
+  ggplot(aes(x= year, y = visits_millions, colour = type_of_location_visited))+
   geom_line(alpha = 0.5)+
-  geom_smooth(method = lm, se = FALSE)
+  geom_smooth(method = lm, se = FALSE)+
+  labs(x = "Year",
+       y = "Visits made (millions)",
+       title = "Visits by year in different locations",
+       color = "Type of location")+
+  scale_x_continuous(breaks = 2011:2021)+
+  visit_theme+
+  theme(panel.grid.minor.x = element_blank(),
+        axis.text.x = element_text(angle = 90, vjust = 0.5))+
+  scale_colour_brewer(palette = "Set2")
 
 locations %>% 
   filter(type_of_location_visited != "All areas") %>% 
-  ggplot(aes(x= year, y = gbp_spent, colour = type_of_location_visited))+
+  mutate(gbp_spent_billions = gbp_spent / 1000000000) %>% 
+  ggplot(aes(x= year, y = gbp_spent_billions, colour = type_of_location_visited))+
   geom_line(alpha = 0.5)+
-  geom_smooth(method = lm, se = FALSE)
-  
+  geom_smooth(method = lm, se = FALSE)+
+  labs(x = "Year",
+       y = "Money spent (£ billions)",
+       title = "Money spent by year in different locations",
+       color = "Type of location")+
+  scale_x_continuous(breaks = 2011:2021)+
+  visit_theme+
+  theme(panel.grid.minor.x = element_blank(),
+        axis.text.x = element_text(angle = 90, vjust = 0.5))+
+  scale_colour_brewer(palette = "Set2")
 
 ```
+To examine trends over time we will look at what people do and where they go.
+
+In terms of tourism activities the majority show an increase in visits over time and money spent. Nights out to bars, pubs, clubs etc. only shows a small increase over the time period in terms of visits but showed a significant increase in terms of money spent.
+
+Day trips/excursions for other leisure purposes is the only activity which showed minimal change in terms of visits (though with peaks and troughs through the years) and a decrease in terms of money spent over the time period (largely due to a large spike in spending for 2014).
+
+In terms of visits and money spent by locations, again a general trend of increase is seen for most locations over the years. The exceptions are seaside - other which shows a significant drop in visits and money spent over this time frame and rural countryside which shows a smaller drop in money spent.
+
+In general these are promising signs for the tourism industry in Scotland, with increased visits and spending over time in the majority of activities and locations.
+
 
 # Is there any way to predict spending and visits for Visit Scotland?
 
@@ -700,7 +756,17 @@ accomodation %>%
   group_by(accommodation_type_and_occupancy, year) %>% 
   summarise(average_occupancy = median(percent_occupancy)) %>% 
   ggplot(aes(x = year, y= average_occupancy, colour = accommodation_type_and_occupancy))+
-  geom_line()
+  geom_line()+
+  labs(x = "Year",
+       y = "Average occupancy",
+       title = "Average occupancy of different accommodation types",
+       color = "Type of accommodation")+
+  scale_x_continuous(breaks = 2011:2021)+
+  visit_theme+
+  theme(panel.grid.minor.x = element_blank(),
+        axis.text.x = element_text(angle = 90, vjust = 0.5))+
+  scale_colour_brewer(palette = "Set2")
+
 ```
 
  
