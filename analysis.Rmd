@@ -75,7 +75,7 @@ The 3 activities that generate the most income for Scotland are eating out, shop
 
 Following these nights out, outdoor leisure and general days out all generated over £5 billion between 2013 and 2019.
 
-# What kind of activity generates is the cause of the most visits to sites in Scotland?
+# What kind of activity generates the most visits to sites in Scotland?
 
 ```{r}
 

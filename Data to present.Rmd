@@ -1,4 +1,9 @@
-
+---
+output: 
+  html_document:
+    df_print: paged
+    code_folding: hide
+---
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
@@ -48,27 +53,30 @@ rdt <- st_read(here("clean data/regional_data.geojson"))
 
 To help Visit Scotland with its goals of realising the potential of the tourism assets throughout Scotland we want to look at data on a range of topics such as;
 
-* What types of activity are visited most and which generate the most revenue?
+* What types of activities are visited most and which generate the most revenue?
 * What types of location are visited most and which generate the most revenue?
 * What methods of transport do tourists use?
 * What demographics of people make up the tourist population?
 * Which counties of Scotland are most popular with tourists?
+* What type of accommodation is more popular in various types of area?
 
-With a better understanding of these type of statistics we can understand what are is more or less popular and from there determine where further support may be required and where further development is needed. Using this Visit Scotland can work with private businesses, public agencies and local authorities to improve visitor experience and help various tourism assets reach their potential.
+With a better understanding of these type of statistics we can understand what are is more or less popular and from there, determine where more support may be required to help meet demand and where further development is needed. Using this Visit Scotland can work with private businesses, public agencies and local authorities to improve visitor experience and help various tourism assets reach their potential.
 
 # Data
 
 The data sets used are from statistics.gov.scot. Data was collected using a survey methodology and due to Covid-19 collection was disrupted in 2020 (bar accommodation data).
 
+The data available is all summary data grouped by year and various categories. Due to this any averages will use median rather than mean to minimise the effect of any outlier values.
+
 ### _Activities, location, transport and demographic data_
 
-This data was generated using over 35,000 interviews with adults over 16, resident in England, Wales and Scotland during weekly survery waves.
+This data was generated using over 35,000 interviews with adults over 16, resident in England, Wales and Scotland during weekly survery waves between 2013 and 2019.
 
 A tourism day trip is defined as taking part in a listed activity, which takes more than 3 hours out of the home and is not done regularly. The activity must not be done in the place of living or work (if started after work). Trips specifically to visitor attractions, live sporting events and special public events did not have to meet all of these criteria.
 
 ### _Accomodation data_
 
-This data was produced from a survey completed by the accomodation provider. This survery is sent out monthly and participation of providers varies over time. Geographic locations are defined as follows;
+This data was produced from a survey completed by the accomodation provider between 2011 and 2021. This survery is sent out monthly and participation of providers varies over time. Geographic locations are defined as follows;
 
 * Large Urban Areas (settlements of over 125,000 people)
 * Other Urban Areas (settlements of 10,000 to 124,999 people)
@@ -81,7 +89,7 @@ This data was produced from a survey completed by the accomodation provider. Thi
 
 ### _Regional tourism data_
 
-This data is gathered from surveys and looks at overnight trips taken for any purpose. Some 100,000 residents of Great Britain were contacted and those who had returned from an overnight trip in the past 4 weeks were asked to describe this trip, from which this data was generated.
+This data is gathered from surveys and looks at overnight trips taken for any purpose between 2013 and 2019. Some 100,000 residents of Great Britain were contacted and those who had returned from an overnight trip in the past 4 weeks were asked to describe this trip, from which this data was generated.
 
 # What kind of tourism activity generates the highest income for Scotland?
 
@@ -112,7 +120,7 @@ activities %>%
 
 ```
 
-The 3 activities that generate the most income for Scotland are eating out, shopping for items that would not generally be bought and visits with friends and family all with over £10 billion generated. This equates to over £1 billion per annum for each of these types of tourism income.
+The 3 activities that generate the most income for Scotland are going out for meals, shopping for items that would not generally be bought and visits with friends and family all with over £10 billion generated. This equates to over £1 billion per annum for each of these types of tourism income.
 
 Following these, nights out, outdoor leisure and general days out all generated over £5 billion between 2013 and 2019.
 
@@ -140,7 +148,6 @@ activities %>%
   visit_theme
 
 ```
-
 
 The largest reason for visits to sites in Scotland is visiting friends and family with over 300 million visits.
 
@@ -178,7 +185,8 @@ When looking at the data by the amount spent per visit we can see that shopping 
 
 Activities with lower numbers of visits but a high spend per visit would be a good way to increase the income for tourism as a whole across Scotland. Shopping for items that aren't normally bought, special personal events and days out to beauty/health centres and spas all rank relatively low in terms of visits but generate a high spend per visit. Popularising Scottish wedding venues or health spas would be a good way to attempt to generate additional revenue as fewer visits would have a proportionally larger effect on overall income. 
 
-Tweets such as the following may be a good idea to increase, showing beautiful wedding venues and planting the idea of a wedding in Scotland to people.
+Tweets such as the following may be a good idea to increase and vary, showing beautiful wedding venues and planting the idea of a wedding in Scotland to people. 
+
 
 ![](analysis_files/wedding.png)
 
@@ -208,7 +216,7 @@ locations %>%
 
 ```
 
-Cities and large towns are the most visited locations in Scotland. The number of visits approximately lines up with the expected size/populations of the locations with some possible exceptions around seaside towns.  With visits friends and family being the top reason for tourism activities it makes sense that visits to the most populated areas would be most common.
+Cities and large towns are the most visited locations in Scotland. The number of visits approximately lines up with the expected size/populations of the locations with some possible exceptions around seaside towns.  With visiting friends and family being the top reason for tourism activities it makes sense that visits to the most populated areas would be most common.
 
 ```{r, echo=FALSE}
 
@@ -302,9 +310,9 @@ travel %>%
 
 ```
 
-Car is far and away the most popular form of transport to arrive at these locations by. In fact there is almost double the amount of visits made by car than all other methods of transport combined. This is a good sign for many of the more remote tourism locations that are not serviced by public transport and the majority of the public's chosen method of transport will still allow them to reach these locations. 
+Car is far and away the most popular form of transport to arrive at these locations by. In fact there is almost double the amount of visits made by car than all other methods of transport combined. This is a good sign for many of the more remote tourism locations that are not serviced by public transport and the majority of the public's chosen method of transport will still allow them to reach these locations. The remoteness of certain destinations may still lead to lower visitor numbers but a lack of public transport would be be completely offputting to the majority of tourists.
 
-The fourth most popular method of transport is walked. This indicates that a lot of tourism is local domestic tourism with people visiting areas within walking distance of where they live. However this data will also potentially include those on hiking holidays so will get people at both ends of the scale in terms of distances walked to reach a destination.
+The fourth most popular method of transport is walked. This may indicate that a lot of tourism is local domestic tourism with people visiting areas within walking distance of where they live. However this data could also include those on hiking holidays so will get people at both ends of the scale in terms of distances walked to reach a destination.
 
 ```{r, echo = FALSE}
 
@@ -340,7 +348,7 @@ travel %>%
 
 ```
 
-Within those people who traveled by public transport train and bus/coach (regular) were the most common transportation taken for visits to tourism activities. Working with major providers of public transport we may be able to find mutually beneficial arrangements that can increase use of their services to reach certain tourism assets, increasing the number of people accessing that asset as well. Discounts tickets and some sort of profit sharing agreement based on this could be financially beneficial to both parties.
+Within those people who traveled by public transport, train and bus/coach (regular) were the most common transportation taken for visits to tourism activities. Working with major providers of public transport we may be able to find mutually beneficial arrangements that can increase use of their services to reach certain tourism assets, increasing the number of people accessing that asset as well. Discounted tickets with a valid bus or train ticket from that day and some sort of profit sharing agreement based on this could be financially beneficial to both parties.
 
 # What type of accomodation is most popular?
 
@@ -367,9 +375,9 @@ accomodation %>%
 
 The data is not available for the total number of stays in the various types of accommodation so occupancy rates will be used to judge popularity, with more occupied accommodation being deemed more popular than less occupied.
 
-This is the only set of data which runs up to 2021. Due to the impact of Covid-19 this data has been severely impacted with very few stays in any kind of accommodation in 2020. While 2021 shows some level of recovery the majority of accommodation types do not appear to have fully recovered. The data used to answer any business questions will therefore be cut off at 2019 before these unprecedented disruptions took place.
+This is the only set of data which runs up to 2021. Due to the impact of Covid-19 this data has been severely impacted with much lower occupancy levels in any kind of accommodation in 2020. While 2021 shows some level of recovery the majority of accommodation types do not appear to have fully recovered. The data used to answer any business questions will therefore be cut off at 2019 before these unprecedented disruptions that took place.
 
-The type of accommodation which shows the least impact to Covid-19 appears to be caravan and camping parks. With these being fully outdoors this type of accommodation will have seen less restrictions and possibly have been more able to stay open and seemed more attractive to prospective customers.
+The type of accommodation which shows the least impact to Covid-19 appears to be caravan and camping parks. With these being fully outdoors this type of accommodation will have seen less restrictions and possibly have been more able to stay open for a larger proportion of the year and seemed more attractive to prospective customers.
 
 ```{r, echo=FALSE}
 accomodation_to_2019 <-  accomodation %>% 
@@ -379,6 +387,7 @@ accomodation_to_2019 %>%
   filter(location == "All" & weekday_weekend == "All", size_of_accommodation == "All") %>% 
   group_by(accommodation_type_and_occupancy) %>% 
   summarise(average_occupancy = median(percent_occupancy)) %>% 
+  mutate(location = as.factor(c("Large Urban Areas", "Other Urban Areas", "Accessible Small Towns", "Remote Small Towns", "Accessible Rural", "Remote Rural", "All"))) %>% 
   ggplot(aes(x = average_occupancy, y = accommodation_type_and_occupancy, fill = accommodation_type_and_occupancy))+
   geom_col()+
   geom_text(aes(label = average_occupancy),
@@ -393,9 +402,9 @@ accomodation_to_2019 %>%
 ```
 
 
-Over the full data set across all sizes of accommodation and location bed occupancy is highest in hotels indicating these are the most popular place to stay. The corresponding bed occupancy data shows there are many rooms with multiple beds where not all are occupied and would be expected to always be lower.
+Over the full data set across all sizes of accommodation and location bed occupancy is highest in hotels indicating these are the most popular place to stay. The corresponding bed occupancy data shows there are many hotel rooms with multiple beds where not all are occupied and would be expected to always be lower.
 
-With additional data (split geographically) it would be very beneficial to be able to see areas with high occupancy rates which could be somewhere which could sustain additional hotels to increase overall visits. Conversely areas with low occupancy rates may require more publicity which Visit Scotland could help provide to draw more people into the area, improving occupancy rates of hotels as well as visitor numbers for local tourism activities.
+With additional data (split geographically rather than by location type) it would be very beneficial to be able to see areas with high occupancy rates which could be somewhere which could sustain additional hotels to increase overall visits. Conversely areas with low occupancy rates may require more publicity which Visit Scotland could help provide to draw more people into the area, improving occupancy rates of hotels as well as visitor numbers for local tourism activities.
 
 It would also be of interest to see how the occupancy runs throughout the year in various types of accommodation (and location). It would be expected that accommodation like camping and caravan parks could see a sharp decline over the winter period while this would not be as extreme for hotels.
 
@@ -403,11 +412,12 @@ It would also be of interest to see how the occupancy runs throughout the year i
 
 ```{r, echo=FALSE}
 
+
 accomodation_to_2019 %>% 
   filter(location != "All") %>% 
   filter(weekday_weekend == "All", size_of_accommodation == "All") %>% 
   group_by(accommodation_type_and_occupancy, location) %>% 
-  mutate(average_occupancy = median(percent_occupancy)) %>% 
+  summarise(average_occupancy = median(percent_occupancy)) %>% 
   ggplot(aes(x = location, y = average_occupancy, group = accommodation_type_and_occupancy, colour = accommodation_type_and_occupancy))+
   geom_line()+
   visit_theme+
@@ -419,14 +429,15 @@ accomodation_to_2019 %>%
        color = "Accommodation type")+
   scale_colour_brewer(palette = "Set2")
 
-
 ```
 
 There are significant difference in the occupancy percentages of different types of accommodation by location, however hotels remain the most popular accommodation type in all locations varying from 77% in large urban areas to 59% in remote small towns.
 
-Self-catering units are the second most popular type of accommodation in accessible rural areas (55%) and the second least popular in remote small towns (40%). Demand for this accommodation type clearly varies significantly due to the location.
+Self-catering units are the second most popular type of accommodation in accessible rural and large urban areas(55% and 63% respectively) and the second least popular in remote small towns (40%). Demand for this accommodation type clearly varies significantly due to the location.
 
 All types of accommodation have their highest occupancy rates in large urban areas apart from guest houses which seem to benefit from areas of lower population to generate higher occupancy rates. This may be due to lower competition outside of large urban areas or an increased desire for this type of accommodation in less populated locations. These show a peak in occupancy in other urban areas indicating this type of accommodation remains popular in towns, but more so in medium sized towns.
+
+When working with new businesses looking to open various types of accommodation across Scotland this data may be beneficial to assist with their business plans and expectations.
 
 # Is there a particular demographic of visitors that we should be focusing on? Who spends the most and who visits the most?
 
@@ -510,22 +521,25 @@ Access to a car shows a large effect on the amount of money spent (£31 billion 
 
 Age also shows some difference with the youngest and oldest groups spending the least and being some of the most frequent visitors. Those individuals between 25 and 34 and 45 and 54 spend the most of each visit with median values across both groups over £40 per visit. 
 
-When looking at whether individuals have children these people take almost 3 times as many trips and spend twice as much money as those without. However due to the increased size of group on the trip when children are involved the average spend per trip is higher.
+When looking at whether individuals have children, these people take almost three times as many trips and spend twice as much money as those without. However due to the increased size of group on the trip when children are involved the average spend per trip is higher.
 
 Tracking by employment status we can see that those individuals with full/part time jobs spend almost 5 times as much as either those in education or unemployed and make around 5 times as many visits. They also spend more per visit at £44 per visit (£25 for those in education and £32 for those who are unemployed).
 
 When analysing by gender males and females spend a relatively similar amount and make around as many visits with females being slightly higher in each category.
 
-Looking at whether individuals are married or not the total spent is almost double for married individuals, perhaps indicative of more groups trips (spouse, family) as opposed to unmarried individuals. Married people take around 150 million trips more than unmarried people.
+Looking at whether individuals are marital status the total spent is double for married individuals, perhaps indicative of more groups trips (spouse, family) as opposed to unmarried individuals. Married people take around 150 million trips more than unmarried people and spend more money per trip.
 
 Examining social grade we can see that those in AB spend the most and take the most trips with individuals in C2 making the least trips and those in DE spending the least. This makes some sense when looking at the descriptions of these roles as it could be expected that those in grade AB would have more disposable income and free time in which to take these trips.
 
+
+Further explanation of social grades
 ![](analysis_files/social_grades.png)
+
+Aiming marketing at these demographics who are more likely to make more visits and spend more money will be useful information for planning advertising campaigns. 
 
 # What insights can we gain from regional tourism? Where are our visitors from and how does the money spent/ nights stayed and visits made compare?
 
 ```{r, echo=FALSE}
-
 median_rdt <- rdt %>%
   filter(location != "Scotland") %>% 
   group_by(location, region_of_residence) %>% 
@@ -533,16 +547,22 @@ median_rdt <- rdt %>%
          average_visits_per_year_thousands = median(visits)/1000,
          average_spend_per_visit = round(gbp_spent/visits, digits = 2)) %>% 
   ungroup()
+```
+
+
+```{r, rows.print = 2}
 
 median_rdt %>% 
   filter(region_of_residence != "All of GB") %>% 
   group_by(region_of_residence) %>% 
-  summarise(total_night_millions = sum(nights)/1000000,
-            total_visit_millions = sum(visits)/1000000,
-            total_spent_millions = sum(gbp_spent)/1000000) %>% 
+  summarise(total_nights_millions = sum(nights)/1000000,
+            total_visits_millions = sum(visits)/1000000,
+            total_spent_billions = sum(gbp_spent)/1000000000) %>% 
   as_tibble() %>% 
   select(-geometry)
 ```
+
+
 With the data for regional tourism only England and Scotland can truly be analysed as Wales is grouped with the rest of GB and due to rounding errors disappears in certain areas. This data is concerned with overnight trips for any purpose.
 
 Comparing England and Scotland we can see that people from these two countries accounted for a very similar number of overnight visits to Scotland. However people from England tend to stay for more nights and (therefore) spend more money.
@@ -605,6 +625,9 @@ leaflet(england_rdt) %>%
 
 ```
 
+
+We can see the most popular location for visitors from England is the city of Edinburgh (4.3 million nights stayed per year), with second and third being Highland (3.5 million nights stayed per year) and Glasgow city (2.8 million nights stayed per year). With these vistiors from England areas including East Dunbartonshire, East Renfrewshire, Midlothian, Clackmannanshire and West Dunbartonshire all average less than 100,000 nights stayed for visitors from England.
+
 __Visitors from Scotland in terms of total nights stayed in each region__
 ```{r, echo=FALSE}
 
@@ -632,9 +655,8 @@ leaflet(scotland_rdt) %>%
 
 
 ```
-We can see the most popular location for visitors from England is the city of Edinburgh (4.3 million nights stayed per year), with second and third being Highland (3.5 million nights stayed per year) and Glasgow city (2.8 million nights stayed per year). With these vistiors areas including East Dunbartonshire, East Renfrewshire, Midlothian, Clackmannanshire and West Dunbartonshire all average less than 100,000 nights stayed for visitors from England.
 
-The highlands is the most common area to stay for visitors from Scotland (3.4 million night stayed per year) with Argyll and Bute (1.6 million nights stayed per year) and Perth and Kinross (1.3 million nights stayed per year) coming next. After this come Edinburgh and Glasgow (1.3 and 1.1 million nights stayed per year respectively). These are lower as expected with lots of the population of Scotland living in these areas they have less reason for overnight stays rather than at home.
+The highlands is the most common area to stay for visitors from Scotland (3.4 million night stayed per year) with Argyll and Bute (1.6 million nights stayed per year) and Perth and Kinross (1.3 million nights stayed per year) coming next. After this come Edinburgh and Glasgow (1.3 and 1.1 million nights stayed per year respectively). These are lower than for England and with lots of the population of Scotland living in these areas they have less need to make overnight stays (rather than at home) to visit these destinations.
 
 East Renfrewshire, East Dunbartonshire, Midlothian, Clackmannanshire, East Ayrshire, Renfrewshire and South Lanarkshire all get less than 100,000 nights of visits on average each year. A similar list to those where people from England spent less time.
 
@@ -644,7 +666,7 @@ __Visitors from England in terms of total visits to each region__
 pal3 <- colorBin("YlOrRd", domain = england_rdt$average_visits_per_year_thousands, bins = 7)
 
 labels3 <- labels <- sprintf(
-  "<strong>%s</strong><br/>%g Average visits (millions) stayed in region per year",
+  "<strong>%s</strong><br/>%g (thousand) Average visits to region per year",
   england_rdt$location, england_rdt$average_visits_per_year_thousands
 ) %>% lapply(htmltools::HTML)
 
@@ -669,7 +691,7 @@ __Visitors from Scotland in terms of total visits to each region__
 pal4 <- colorBin("YlOrRd", domain = scotland_rdt$average_visits_per_year_thousands, bins = 7)
 
 labels4 <- labels <- sprintf(
-  "<strong>%s</strong><br/>%g Average visits (millions) stayed in region per year",
+  "<strong>%s</strong><br/>%g (thousand) Average visits to region per year",
   scotland_rdt$location, scotland_rdt$average_visits_per_year_thousands
 ) %>% lapply(htmltools::HTML)
 
@@ -691,9 +713,9 @@ leaflet(scotland_rdt) %>%
 
 Popularity for visiting each region largely mirrors where people have spent the most night with the top 5 destinations for both England and Scotland in terms of nights being the top 5 for visits (albeit in a different order). The main change is an increased popularity of Edinburgh and Glasgow for Scottish tourists in terms of visits. With much of the Scottish population in the central belt this makes some sense as these cities would both be easily reached without the distance requirement that could necessitate an overnight stay and contain lots of popular tourist attractions.
 
-The locations which are least popular too mirrors the data seen for nights bar some of the islands (Orkney and Shetland in particular). With these destinations being more remote we can see that comparatively they are more likely to be stayed in for longer than some mainland destinations.
+The locations which are least popular too mirrors the data seen for nights bar some of the islands (Orkney and Shetland in particular). With these destinations being more remote we can see that comparatively they are more likely to be stayed in for longer than some mainland destinations, hence fewer visits in comparison to nights stayed.
 
-For the most part these trends maintain in terms of average spend with the most popular locations in terms of nights and visits being the places where people spend the most per visit.
+For the most part these trends maintain in terms of total spend with the most popular locations in terms of nights and visits being the places where people spend the most per visit.
 
 
 ```{r, echo=FALSE}
@@ -703,21 +725,29 @@ scotland_rdt %>%
   select(location, average_nights_per_year_millions, average_visits_per_year_thousands, average_spend_per_visit) %>% 
   arrange(desc(average_spend_per_visit)) %>% 
   as_tibble() %>% 
-  select(-geometry)
+  select(-geometry) %>% 
+  mutate(average_length_of_stay = (average_nights_per_year_millions*1000)/average_visits_per_year_thousands) %>% 
+  select(location, average_spend_per_visit, average_length_of_stay, average_nights_per_year_millions, average_visits_per_year_thousands)
+  
 
 england_rdt %>% 
   distinct(location, .keep_all = TRUE) %>% 
   select(location, average_nights_per_year_millions, average_visits_per_year_thousands, average_spend_per_visit) %>% 
   arrange(desc(average_spend_per_visit)) %>% 
   as_tibble() %>% 
-  select(-geometry)
-
+  select(-geometry) %>% 
+  mutate(average_length_of_stay = (average_nights_per_year_millions*1000)/average_visits_per_year_thousands) %>% 
+  select(location, average_spend_per_visit, average_length_of_stay, average_nights_per_year_millions, average_visits_per_year_thousands)
 
 ```
 
+In terms of the average spend per visit we see some of the islands in  particular jump to the top of the list with the longer stays per visit being a major factor in this.
+
 # How have general tourism rates changed over time?
 
-```{r, echo = FALSE}
+To examine trends over time we will look at what people do and where they go. This will be done using linear methodology.
+
+```{r, echo = FALSE, message=FALSE}
 
 activities %>% 
   filter(tourism_activity != "All") %>% 
@@ -781,7 +811,7 @@ locations %>%
 
 ```
 
-To examine trends over time we will look at what people do and where they go.
+
 
 In terms of tourism activities the majority show an increase in visits over time and money spent. Nights out to bars, pubs, clubs etc. only shows a small increase over the time period in terms of visits but showed a significant increase in terms of money spent.
 
@@ -797,7 +827,7 @@ With only 7 years of data available there is not sufficient data to accurately p
 
 Data was not available for the majority of these data sets for 2020 or 2021 due to Covid-19 related travel restrictions affecting data collection. However we can see that from the accommodation data there was a huge impact on tourism and we would expect to see this across most, if not all, of the other data sets available.
 
-Any predictions made based on 2013 to 2019 data would not have been accurate for 2020 due to this unprecedented change in world circumstances. Any attempts to extrapolate for 2022 and beyond would be useless due to the ongoing effects on the pandemic and now other challenges presented including the cost of living crisis.
+Any predictions made based on 2013 to 2019 data would not have been accurate for 2020 due to this unprecedented change in world circumstances. Any attempts to extrapolate for 2022 and beyond would be flawed due to the ongoing effects on the pandemic and now other challenges presented including the cost of living crisis.
 
 We have however seen that in general the amount of visits and spending have increased over time so there is some reason to believe, once the current levels of uncertainty with regards to finance and travel are resolved, there will continue to be an increase in tourism levels for Scotland. 
 
