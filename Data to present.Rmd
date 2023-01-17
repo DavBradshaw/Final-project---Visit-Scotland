@@ -60,7 +60,7 @@ To help Visit Scotland with its goals of realising the potential of the tourism 
 * Which counties of Scotland are most popular with tourists?
 * What type of accommodation is more popular in various types of area?
 
-With a better understanding of these type of statistics we can understand what are is more or less popular and from there, determine where more support may be required to help meet demand and where further development is needed. Using this Visit Scotland can work with private businesses, public agencies and local authorities to improve visitor experience and help various tourism assets reach their potential.
+With a better understanding of these type of statistics we can understand what are is more or less popular and from there, determine where more support may be required to help meet demand and where further development is needed. Using this, Visit Scotland can work with private businesses, public agencies and local authorities to improve visitor experience and help various tourism assets reach their potential.
 
 # Data
 
@@ -120,11 +120,11 @@ activities %>%
 
 ```
 
-The 3 activities that generate the most income for Scotland are going out for meals, shopping for items that would not generally be bought and visits with friends and family all with over £10 billion generated. This equates to over £1 billion per annum for each of these types of tourism income.
+The 3 activities that generate the most income for Scotland are going out for meals, shopping for items that would not generally be bought and visits with friends and family, all with over £10 billion generated. This equates to over £1 billion per annum for each of these types of tourism income.
 
 Following these, nights out, outdoor leisure and general days out all generated over £5 billion between 2013 and 2019.
 
-# What kind of activity generates is the cause of the most visits to sites in Scotland?
+# What kind of activity is the cause of the most visits to sites in Scotland?
 
 ```{r, echo = FALSE}
 
@@ -183,9 +183,9 @@ activities %>%
 
 When looking at the data by the amount spent per visit we can see that shopping for items that you do not regularly buy is highest. Following this meals and special personal events both generated over £50 per visit.
 
-Activities with lower numbers of visits but a high spend per visit would be a good way to increase the income for tourism as a whole across Scotland. Shopping for items that aren't normally bought, special personal events and days out to beauty/health centres and spas all rank relatively low in terms of visits but generate a high spend per visit. Popularising Scottish wedding venues or health spas would be a good way to attempt to generate additional revenue as fewer visits would have a proportionally larger effect on overall income. 
+Activities with lower numbers of visits but a high spend per visit would be a good way to increase the income for tourism as a whole across Scotland. Shopping for items that aren't normally bought, special personal events and days out to beauty/health centres and spas all rank relatively low in terms of visits but generate a high spend per visit. 
 
-Tweets such as the following may be a good idea to increase and vary, showing beautiful wedding venues and planting the idea of a wedding in Scotland to people. 
+Popularising Scottish wedding venues or health spas would be a good way to attempt to generate additional revenue as fewer visits would have a proportionally larger effect on overall income. Tweets such as the following may be a good idea to increase and vary, showing beautiful wedding venues and planting the idea of a wedding in Scotland to people. 
 
 
 ![](analysis_files/wedding.png)
@@ -312,7 +312,7 @@ travel %>%
 
 Car is far and away the most popular form of transport to arrive at these locations by. In fact there is almost double the amount of visits made by car than all other methods of transport combined. This is a good sign for many of the more remote tourism locations that are not serviced by public transport and the majority of the public's chosen method of transport will still allow them to reach these locations. The remoteness of certain destinations may still lead to lower visitor numbers but a lack of public transport would be be completely offputting to the majority of tourists.
 
-The fourth most popular method of transport is walked. This may indicate that a lot of tourism is local domestic tourism with people visiting areas within walking distance of where they live. However this data could also include those on hiking holidays so will get people at both ends of the scale in terms of distances walked to reach a destination.
+The fourth most popular method of transport is walked. This may indicate that a lot of tourism is local domestic tourism with people visiting areas within walking distance of where they live. However this data could also include hikers so may include people who have walked a considerable distance and stopped off for a meal or drink as part of this walk.
 
 ```{r, echo = FALSE}
 
@@ -375,7 +375,7 @@ accomodation %>%
 
 The data is not available for the total number of stays in the various types of accommodation so occupancy rates will be used to judge popularity, with more occupied accommodation being deemed more popular than less occupied.
 
-This is the only set of data which runs up to 2021. Due to the impact of Covid-19 this data has been severely impacted with much lower occupancy levels in any kind of accommodation in 2020. While 2021 shows some level of recovery the majority of accommodation types do not appear to have fully recovered. The data used to answer any business questions will therefore be cut off at 2019 before these unprecedented disruptions that took place.
+This is the only set of data which runs up to 2021. Due to the impact of Covid-19, this data has been severely impacted with much lower occupancy levels in any kind of accommodation in 2020. While 2021 shows some level of recovery, the majority of accommodation types do not appear to have fully recovered. The data used to answer any business questions will therefore be cut off at 2019 before these unprecedented disruptions that took place.
 
 The type of accommodation which shows the least impact to Covid-19 appears to be caravan and camping parks. With these being fully outdoors this type of accommodation will have seen less restrictions and possibly have been more able to stay open for a larger proportion of the year and seemed more attractive to prospective customers.
 
@@ -433,7 +433,7 @@ accomodation_to_2019 %>%
 
 There are significant difference in the occupancy percentages of different types of accommodation by location, however hotels remain the most popular accommodation type in all locations varying from 77% in large urban areas to 59% in remote small towns.
 
-Self-catering units are the second most popular type of accommodation in accessible rural and large urban areas(55% and 63% respectively) and the second least popular in remote small towns (40%). Demand for this accommodation type clearly varies significantly due to the location.
+Self-catering units are the second most popular type of accommodation in accessible rural and large urban areas (55% and 63% respectively) and the second least popular in remote small towns (40%). Demand for this accommodation type clearly varies significantly due to the location.
 
 All types of accommodation have their highest occupancy rates in large urban areas apart from guest houses which seem to benefit from areas of lower population to generate higher occupancy rates. This may be due to lower competition outside of large urban areas or an increased desire for this type of accommodation in less populated locations. These show a peak in occupancy in other urban areas indicating this type of accommodation remains popular in towns, but more so in medium sized towns.
 
@@ -521,13 +521,13 @@ Access to a car shows a large effect on the amount of money spent (£31 billion 
 
 Age also shows some difference with the youngest and oldest groups spending the least and being some of the most frequent visitors. Those individuals between 25 and 34 and 45 and 54 spend the most of each visit with median values across both groups over £40 per visit. 
 
-When looking at whether individuals have children, these people take almost three times as many trips and spend twice as much money as those without. However due to the increased size of group on the trip when children are involved the average spend per trip is higher.
+When looking at whether individuals have children, those without take almost three times as many trips and spend twice as much money as those with children. However due to the increased size of group on the trip when children are involved the average spend per trip is higher.
 
-Tracking by employment status we can see that those individuals with full/part time jobs spend almost 5 times as much as either those in education or unemployed and make around 5 times as many visits. They also spend more per visit at £44 per visit (£25 for those in education and £32 for those who are unemployed).
+Tracking by employment status we can see that those individuals with full/part time jobs spend almost 5 times as much as either those in education or unemployed and make around 5 times as many visits. They also spend more per visit at £44 per visit (£25 for those in education and £32 for those who are unemployed). This supports the idea that these individuals would have additional disposable income to spend on tourism type activities.
 
 When analysing by gender males and females spend a relatively similar amount and make around as many visits with females being slightly higher in each category.
 
-Looking at whether individuals are marital status the total spent is double for married individuals, perhaps indicative of more groups trips (spouse, family) as opposed to unmarried individuals. Married people take around 150 million trips more than unmarried people and spend more money per trip.
+Looking at individuals marital status the total spent is double for married individuals, perhaps indicative of more groups trips (spouse, family) as opposed to unmarried individuals. Married people take around 150 million trips more than unmarried people and spend more over £10 more per trip.
 
 Examining social grade we can see that those in AB spend the most and take the most trips with individuals in C2 making the least trips and those in DE spending the least. This makes some sense when looking at the descriptions of these roles as it could be expected that those in grade AB would have more disposable income and free time in which to take these trips.
 
@@ -563,7 +563,7 @@ median_rdt %>%
 ```
 
 
-With the data for regional tourism only England and Scotland can truly be analysed as Wales is grouped with the rest of GB and due to rounding errors disappears in certain areas. This data is concerned with overnight trips for any purpose.
+With the data for regional tourism only England and Scotland can truly be analysed separately as Wales is grouped with the rest of GB and due to rounding errors the difference disappears in certain areas. This data is concerned with overnight trips for any purpose.
 
 Comparing England and Scotland we can see that people from these two countries accounted for a very similar number of overnight visits to Scotland. However people from England tend to stay for more nights and (therefore) spend more money.
 
@@ -626,7 +626,7 @@ leaflet(england_rdt) %>%
 ```
 
 
-We can see the most popular location for visitors from England is the city of Edinburgh (4.3 million nights stayed per year), with second and third being Highland (3.5 million nights stayed per year) and Glasgow city (2.8 million nights stayed per year). With these vistiors from England areas including East Dunbartonshire, East Renfrewshire, Midlothian, Clackmannanshire and West Dunbartonshire all average less than 100,000 nights stayed for visitors from England.
+We can see the most popular location for visitors from England is the city of Edinburgh (4.3 million nights stayed per year), with second and third being the Highlands (3.5 million nights stayed per year) and Glasgow city (2.8 million nights stayed per year). With these vistiors from England areas including East Dunbartonshire, East Renfrewshire, Midlothian, Clackmannanshire and West Dunbartonshire all average less than 100,000 nights stayed for visitors from England.
 
 __Visitors from Scotland in terms of total nights stayed in each region__
 ```{r, echo=FALSE}
@@ -656,7 +656,7 @@ leaflet(scotland_rdt) %>%
 
 ```
 
-The highlands is the most common area to stay for visitors from Scotland (3.4 million night stayed per year) with Argyll and Bute (1.6 million nights stayed per year) and Perth and Kinross (1.3 million nights stayed per year) coming next. After this come Edinburgh and Glasgow (1.3 and 1.1 million nights stayed per year respectively). These are lower than for England and with lots of the population of Scotland living in the central belt they have less need to make overnight stays (rather than at home) to visit these destinations.
+The Highlands are the most common area to stay for visitors from Scotland (3.4 million night stayed per year) with Argyll and Bute (1.6 million nights stayed per year) and Perth and Kinross (1.3 million nights stayed per year) coming next. After this come Edinburgh and Glasgow (1.3 and 1.1 million nights stayed per year respectively). These are lower than for England and with lots of the population of Scotland living in the central belt they have less need to make overnight stays (rather than at home) to visit these destinations.
 
 East Renfrewshire, East Dunbartonshire, Midlothian, Clackmannanshire, East Ayrshire, Renfrewshire and South Lanarkshire all get less than 100,000 nights of visits on average each year. A similar list to those where people from England spent less time.
 
@@ -822,7 +822,7 @@ locations %>%
 
 In terms of tourism activities the majority show an increase in visits over time and money spent. Nights out to bars, pubs, clubs etc. only shows a small increase over the time period in terms of visits but showed a significant increase in terms of money spent.
 
-Day trips/excursions for other leisure purposes is the only activity which showed minimal change in terms of visits (though with peaks and troughs through the years) and a decrease in terms of money spent over the time period (largely due to a large spike in spending for 2014).
+Day trips/excursions for other leisure purposes is the only activity which showed minimal change in terms of visits (though with peaks and troughs through the years) and a decrease in terms of money spent over the time period (potentially due to a large spike in spending for 2014).
 
 In terms of visits and money spent by locations, again a general trend of increase is seen for most locations over the years. The exceptions are seaside - other which shows a significant drop in visits and money spent over this time frame and rural countryside which shows a smaller drop in money spent.
 
@@ -863,22 +863,28 @@ This data can be used to assist Visit Scotland in decision making on where more 
 
 Some of the most popular activities in terms on money generated and visits taken are meals out, shopping, outdoor leisure and visits with friends and family. In terms of spend per visit special personal events and days out to spas/health clubs generate a high value while being low in terms of the number of visits. By attempting to increase the marketing and prevalence of these types of activity it should be possible to increase the overall spend, improving the tourism economy for Scotland as a whole.
 
-Cities are the most popular location with tourists to Scotland and the order of all locations appears to correlate well with the expected population of these locations. This may well relate to the most common reason for visits being to see friends and family and these locations often having more potential tourist activities. Tourism assets in smaller locations may benefit from the increase awareness Visit Scotland could provide to grow their business (especially those in close proximity to cities).
+Cities are the most popular location with tourists to Scotland and the order of all locations appears to correlate well with the expected population of these locations. This may well relate to the most common reason for visits being to see friends and family and these locations often having more potential tourist activities. Tourism assets in smaller locations may benefit from the increased awareness Visit Scotland could provide to grow their business (especially those in close proximity to cities).
 
-When looking at the method of transport used car is by far the most popular with almost double the number of visits compared to all other methods combined. This bodes well for locations without good public transport links though these may still suffer from their location to some extent.
+When looking at the method of transport used car is by far the most popular with almost double the number of visits compared to all other methods combined. This bodes well for locations without good public transport links though these may still suffer from their location to some extent. Working with public transport providers may be able to create a mutually beneficial arrangement to improve public transport use and access to tourism destinations.
 
 The most popular type of accommodation in all areas is hotels though popularity of all types varies by location. This information may be of use to Visit Scotland in supporting new types of accommodation by created (building new hotels, opening new camp sites etc.) with expected popularity data based on similar types in similar locations.
 
 By demographics we can see there are certain groups who make the most trips to Scotland and spend the most money. Identification of these keys demographics may be beneficial to targeted marketing campaigns to draw more visitors. Without a full breakdown of how these numbers are summed we cannot fully make this decision (would be able to run a regression model with the original survey data). We can see however that the median spending is highest for;
+
 * People with access to a car
+
 * People aged 25-34 and 45-54
+
 * Individuals without children
+
 * Employed people
+
 * Married couples
+
 * Those in social grades AB and C2.
 
-Viewing regional tourism we can see similar patterns between England and Scotland those trips are generally longer for those based in England. The Highlands, Edinburgh and Glasgow are particularly popular and Visit Scotland should work with assets in this area to provide the nest experiences to tourists. A major impact Visit Scotland could have is providing increased awareness of locations in less popular counties to attempt to grow business.
+Viewing regional tourism we can see similar patterns between England and Scotland those trips are generally longer for those based in England. The Highlands, Edinburgh and Glasgow are particularly popular and Visit Scotland should work with assets in this area to provide the best experiences to tourists. A major impact Visit Scotland could have is providing increased awareness of locations in less popular counties to attempt to grow business.
 
-In general tourism is increasing year on year for the majority of locations and activities. However with only 7 years of full data prior to the Covid-19 pandemic it is difficult to predict with any accuracy tourism levels for the future. With 2020 being so disrupted and 2021 not much better and predictions based on 2019 data for the future are unlikely to have a high level of accuracy. We would need to settle in for a few more years and assess recovery from the pandemic before we can make good predicitions again. However trends increasing prior to this is a promising sign that recovery should occur.
+In general tourism is increasing year on year for the majority of locations and activities. However with only 7 years of full data prior to the Covid-19 pandemic it is difficult to predict with any accuracy tourism levels for the future. With 2020 being so disrupted and 2021 not much better any predictions based on 2019 data for the future are unlikely to have a high level of accuracy. We would need to settle in for a few more years and assess recovery from the pandemic before we can make good predictions again. However trends increasing prior to this is a promising sign that recovery should occur.
 
 
