@@ -107,16 +107,17 @@ activities %>%
   mutate(tourism_order = 1:n()) %>%
   mutate(tourism_order = as.character(tourism_order)) %>% 
   ggplot(aes(x = total_income_billions, y = fct_reorder(tourism_activity, total_income_billions), fill = forcats::fct_inorder(tourism_order))) +
-  geom_col()+
+  geom_col(fill = "#650360")+
   geom_text(aes(label = total_income_billions),
             nudge_x = 0.9,
             size = 3)+
-  scale_fill_manual(values = rep(visit_colour, length.out = 15))+
   theme(legend.position = "none")+
   labs(x = "Total spend (£ billions)",
        y = "Type of tourism activity",
        title = "Total spent on activity")+
   visit_theme
+
+
 
 ```
 
@@ -136,16 +137,16 @@ activities %>%
   mutate(tourism_order = 1:n()) %>%
   mutate(tourism_order = as.character(tourism_order)) %>% 
   ggplot(aes(x = total_visits_millions, y = fct_reorder(tourism_activity, total_visits_millions), fill = forcats::fct_inorder(tourism_order))) +
-  geom_col()+
+  geom_col(fill = "#005EB8")+
   geom_text(aes(label = total_visits_millions),
             nudge_x = 15,
             size = 3) +
-  scale_fill_manual(values = rep(visit_colour, length.out = 15))+
   theme(legend.position = "none")+
   labs(x = "Total visits (millions)",
        y = "Type of tourism activity",
        title = "Total visits to activity")+
   visit_theme
+
 
 ```
 
@@ -168,10 +169,9 @@ activities %>%
   mutate(tourism_order = 1:n()) %>%
   mutate(tourism_order = as.character(tourism_order)) %>% 
   ggplot(aes(x = average_spend_per_visit, y = fct_reorder(tourism_activity, average_spend_per_visit), fill = forcats::fct_inorder(tourism_order))) +
-  geom_col()+
+  geom_col(fill = "#650360")+
   geom_text(aes(label = average_spend_per_visit),
             nudge_x = 6)+ 
-  scale_fill_manual(values = rep(visit_colour, length.out = 15))+
   xlim(0,90)+
   theme(legend.position = "none")+
   labs(x = "Average spend per visit (£)",
@@ -203,11 +203,10 @@ locations %>%
   mutate(tourism_order = 1:n()) %>%
   mutate(tourism_order = as.character(tourism_order)) %>% 
   ggplot(aes(x = total_visits_millions, y = fct_reorder(type_of_location_visited, total_visits_millions), fill = forcats::fct_inorder(tourism_order))) +
-  geom_col()+
+  geom_col(fill = "#650360")+
   geom_text(aes(label = total_visits_millions),
             nudge_x = 15,
             size = 3) +
-  scale_fill_manual(values = rep(visit_colour, length.out = 15))+
   theme(legend.position = "none")+
   labs(x = "Total visits (millions)",
        y = "Type of Location",
@@ -229,11 +228,10 @@ locations %>%
   mutate(tourism_order = 1:n()) %>%
   mutate(tourism_order = as.character(tourism_order)) %>% 
   ggplot(aes(x = total_spent_billions, y = fct_reorder(type_of_location_visited, total_spent_billions), fill = forcats::fct_inorder(tourism_order))) +
-  geom_col()+
+  geom_col(fill = "#005EB8")+
   geom_text(aes(label = total_spent_billions),
             nudge_x = 1,
             size = 3) +
-  scale_fill_manual(values = rep(visit_colour, length.out = 15))+
   theme(legend.position = "none")+
   labs(x = "Total spent (£ billions)",
        y = "Type of Location",
@@ -249,11 +247,10 @@ locations %>%
   mutate(tourism_order = 1:n()) %>%
   mutate(tourism_order = as.character(tourism_order)) %>% 
   ggplot(aes(x = average_spend, y = fct_reorder(type_of_location_visited, average_spend), fill = forcats::fct_inorder(tourism_order))) +
-  geom_col()+
+  geom_col(fill = "#650360")+
   geom_text(aes(label = average_spend),
             nudge_x = 2,
             size = 3) +
-  scale_fill_manual(values = rep(visit_colour, length.out = 15))+
   theme(legend.position = "none")+
   labs(x = "Average spend (£)",
        y = "Type of Location",
@@ -279,11 +276,10 @@ travel %>%
   mutate(tourism_order = 1:n()) %>%
   mutate(tourism_order = as.character(tourism_order)) %>% 
   ggplot(aes(x = total_visits_millions, y = fct_reorder(method_of_travel, total_visits_millions), fill = forcats::fct_inorder(tourism_order))) +
-  geom_col()+
+  geom_col(fill = "#650360")+
   geom_text(aes(label = total_visits_millions),
             nudge_x = 20,
             size = 3) +
-  scale_fill_manual(values = rep(visit_colour, length.out = 30))+
   theme(legend.position = "none")+
   labs(x = "Total visits (millions)",
        y = "Method of transport",
@@ -335,11 +331,10 @@ travel %>%
   mutate(tourism_order = 1:n()) %>%
   mutate(tourism_order = as.character(tourism_order)) %>% 
   ggplot(aes(x = total_visits_millions, y = fct_reorder(method_of_travel, total_visits_millions), fill = forcats::fct_inorder(tourism_order))) +
-  geom_col()+
+  geom_col(fill = "#005EB8")+
   geom_text(aes(label = total_visits_millions),
             nudge_x = 5,
             size = 3) +
-  scale_fill_manual(values = rep(visit_colour, length.out = 30))+
   theme(legend.position = "none")+
   labs(x = "Total visits by public transport (millions)",
        y = "Method of transport",
@@ -360,7 +355,7 @@ accomodation %>%
   summarise(average_occupancy = median(percent_occupancy)) %>% 
   ungroup() %>% 
   ggplot(aes(x = year, y= average_occupancy, colour = accommodation_type_and_occupancy))+
-  geom_line()+
+  geom_line(size = 1)+
   labs(x = "Year",
        y = "Average occupancy",
        title = "Average occupancy of different accommodation types",
@@ -397,7 +392,7 @@ accomodation_to_2019 %>%
   theme(legend.position = "none")+
   labs(x = "Average occupancy (%)",
        y = "Type of accommodation",
-       title = "Percentage occupancy of accommodation types")+
+       title = "% occupancy of accommodation types")+
   visit_theme
 ```
 
@@ -419,7 +414,7 @@ accomodation_to_2019 %>%
   group_by(accommodation_type_and_occupancy, location) %>% 
   summarise(average_occupancy = median(percent_occupancy)) %>% 
   ggplot(aes(x = location, y = average_occupancy, group = accommodation_type_and_occupancy, colour = accommodation_type_and_occupancy))+
-  geom_line()+
+  geom_line(size = 1)+
   visit_theme+
   theme(panel.grid.minor.x = element_blank(),
         axis.text.x = element_text(angle = 90, vjust = 0.5))+

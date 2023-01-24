@@ -1,0 +1,124 @@
+## Run data to present first for data in environment.
+
+```{r}
+library(scales)
+```
+
+```{r}
+visit_theme <- theme(axis.text = element_text(size = 14),
+                    plot.title = element_text(size = 14),
+                    panel.grid.minor.y = element_blank())
+```
+
+
+```{r}
+
+activities
+
+activities %>% 
+  filter(tourism_activity != "All") %>% 
+  filter(tourism_activity %in% c("Went out for a meal", "Shopping for items that you do not regularly buy", "Visited friends or family for leisure", "Day out to a beauty/health centre/spa, etc.", "Special personal events e.g. wedding, graduation")) %>% 
+  group_by(tourism_activity) %>% 
+  summarise(total_income_billions = round(sum(gdp_spent_billions), digits = 2)) %>% 
+  arrange(desc(total_income_billions)) %>%
+  mutate(tourism_order = 1:n()) %>%
+  mutate(tourism_order = as.character(tourism_order)) %>% 
+  ggplot(aes(x = total_income_billions, y = fct_reorder(tourism_activity, total_income_billions), fill = forcats::fct_inorder(tourism_order))) +
+  geom_col(fill = "#650360")+
+  geom_text(aes(label = total_income_billions),
+            nudge_x = 0.9,
+            size = 3)+
+  theme(legend.position = "none")+
+  labs(x = "Total spend (£ billions)",
+       y = "Type of tourism activity",
+       title = "Total spent on selected activities")+
+  visit_theme
+
+activities %>% 
+  filter(tourism_activity != "All") %>% 
+  filter(tourism_activity %in% c("Went out for a meal", "Shopping for items that you do not regularly buy", "Visited friends or family for leisure", "Day out to a beauty/health centre/spa, etc.", "Special personal events e.g. wedding, graduation")) %>% 
+  group_by(tourism_activity) %>% 
+  summarise(total_visits_millions = sum(visits_millions)) %>% 
+  arrange(desc(total_visits_millions)) %>% 
+  mutate(tourism_order = 1:n()) %>%
+  mutate(tourism_order = as.character(tourism_order)) %>% 
+  ggplot(aes(x = total_visits_millions, y = fct_reorder(tourism_activity, total_visits_millions), fill = forcats::fct_inorder(tourism_order))) +
+  geom_col(fill = "#005EB8")+
+  geom_text(aes(label = total_visits_millions),
+            nudge_x = 15,
+            size = 3) +
+  theme(legend.position = "none")+
+  labs(x = "Total visits (millions)",
+       y = "Type of tourism activity",
+       title = "Total visits to selected activities")+
+  visit_theme
+
+activities %>% 
+  mutate(spend_per_visit = gbp_spent / visits) %>% 
+  filter(tourism_activity %in% c("Went out for a meal", "Shopping for items that you do not regularly buy", "Visited friends or family for leisure", "Day out to a beauty/health centre/spa, etc.", "Special personal events e.g. wedding, graduation")) %>% 
+  filter(tourism_activity != "All") %>% 
+  group_by(tourism_activity) %>% 
+  summarise(average_spend_per_visit = round(median(spend_per_visit), digits = 2)) %>% 
+  arrange(desc(average_spend_per_visit)) %>% 
+  mutate(tourism_order = 1:n()) %>%
+  mutate(tourism_order = as.character(tourism_order)) %>% 
+  ggplot(aes(x = average_spend_per_visit, y = fct_reorder(tourism_activity, average_spend_per_visit), fill = forcats::fct_inorder(tourism_order))) +
+  geom_col(fill = "#650360")+
+  geom_text(aes(label = average_spend_per_visit),
+            nudge_x = 6)+ 
+  xlim(0,90)+
+  scale_y_discrete(labels = label_wrap(30))+
+  theme(legend.position = "none")+
+  labs(x = "Average spend per visit (£)",
+       y = "Type of tourism activity",
+       title = "Average spend of selected activities")+
+  visit_theme  
+```
+
+```{r}
+demographics %>% 
+  mutate(type = recode(type, "Employed/self-employed (full or part time)" = "In employment",
+                       "In full or part time education" = "In education",
+                       "Unemployed/not working" = "Not working")) %>% 
+  group_by(category, type) %>% 
+  summarise(total_spend_billions = sum(gbp_spent_billions)) %>% 
+  ggplot(aes(fill = type, y = total_spend_billions, x = category))+
+  geom_bar(position = "stack", stat = "identity")+
+  geom_text(aes(label = type), size = 2.5, position = position_stack(vjust = 0.6)) +
+  geom_text(aes(label = total_spend_billions), size = 2.5, position = position_stack(vjust = 0.4)) +
+  theme(legend.position = "none")+
+  labs(x = "Demographic category, stacked by type",
+       y = "Total spend (£ billions)",
+       title = "Total spending of different demographics")+
+  visit_theme
+
+demographics %>% 
+  mutate(type = recode(type, "Employed/self-employed (full or part time)" = "In employment",
+                       "In full or part time education" = "In education",
+                       "Unemployed/not working" = "Not working")) %>% 
+  group_by(category, type) %>% 
+  summarise(total_visits = sum(visits_millions)) %>% 
+  ggplot(aes(fill = type, y = total_visits, x = category))+
+  geom_bar(position = "stack", stat = "identity")+
+  geom_text(aes(label = type), size = 2.5, position = position_stack(vjust = 0.6)) +
+  geom_text(aes(label = total_visits), size = 2.5, position = position_stack(vjust = 0.4)) +
+  theme(legend.position = "none")+
+  labs(x = "Demographic category, stacked by type",
+       y = "Total visits (millions)",
+       title = "Total visits of different demographics")+
+  visit_theme
+
+demographics %>%
+  distinct(type, .keep_all = TRUE) %>% 
+  ggplot(aes(x = type, y = median_spend_per_visit, fill = type))+
+  geom_col()+
+  geom_text(aes(label = type), size = 2.5, position = position_stack(vjust = 0.5), angle = 90) +
+  facet_grid(~category, scales = "free")+
+  theme(axis.text.x = element_blank(),
+        legend.position = "none")+
+    labs(x = "Demographic category",
+       y = "Median spend per visit",
+       title = "Median spending by different demographics")+
+    visit_theme
+```
+
